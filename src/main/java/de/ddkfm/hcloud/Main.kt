@@ -7,6 +7,6 @@ fun main(args : Array<String>) {
     var hCloud = KoHCloud(token = token);
     val servers = hCloud.getServers();
     for(server in servers) {
-        println(server)
+        println(server.name)
     }
 }
