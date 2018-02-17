@@ -27,7 +27,7 @@ data class IPv4(
 data class IPv6(
         var ip : String,
         var blocked : Boolean,
-        var dnsPtr : List<IP>
+        var dnsPtr : List<IP>?
 )
 
 data class PublicNetwork(
