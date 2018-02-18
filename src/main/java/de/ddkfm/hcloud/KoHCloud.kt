@@ -121,9 +121,12 @@ class KoHCloud {
         return returnList;
     }
 
-    //
-    // data center branch
-    //
+
+    /*
+     *
+     * data center functions
+     *
+     */
 
 
     // retrieve all data centers
