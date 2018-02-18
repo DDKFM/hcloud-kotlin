@@ -28,7 +28,6 @@ class dev_datacenter {
                     id = jsonDataCenters.getInt("id"),
                     name = jsonDataCenters.getString("name"),
                     description = jsonDataCenters.getString("description"),
-                    recommendation = jsonDataCenters.getInt("recommendation")
             );
             returnList.add(dc);
         }
@@ -49,8 +48,7 @@ class dev_datacenter {
         var dc = DataCenter(
                 id = jsondatacenter.getInt("id"),
                 name = jsondatacenter.getString("name"),
-                description = jsondatacenter.getString("description"),
-                recommendation =  null
+                description = jsondatacenter.getString("description")
         );
         return dc;
     }
