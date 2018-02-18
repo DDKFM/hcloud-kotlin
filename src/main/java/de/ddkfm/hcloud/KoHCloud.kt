@@ -16,7 +16,7 @@ class KoHCloud {
     constructor(token : String) {
         this.auth = "Bearer $token";
     }
-
+    // POST request
     private fun post(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
         val headers = header ?: emptyMap();
         return Unirest
@@ -25,7 +25,7 @@ class KoHCloud {
                 .header("Authorization", auth)
                 .body(json);
     }
-
+    // PUT request
     private fun put(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
         val headers = header ?: emptyMap();
         return Unirest
@@ -34,7 +34,7 @@ class KoHCloud {
                 .header("Authorization", auth)
                 .body(json);
     }
-
+    // DELETE request
     private fun delete(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
         val headers = header ?: emptyMap();
         return Unirest
@@ -43,7 +43,7 @@ class KoHCloud {
                 .header("Authorization", auth)
                 .body(json);
     }
-
+    // GET request
     private fun get(url : String, header : Map<String, String>?): GetRequest? {
         val headers = header ?: emptyMap();
         return Unirest
@@ -52,6 +52,7 @@ class KoHCloud {
                 .header("Authorization", auth)
     }
 
+    // get all servers by the project
     fun getServers() : List<Server> {
         var url = "$endpoint/servers";
         var req = this.get(url = "/servers", header = null)
