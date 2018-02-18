@@ -1,10 +1,11 @@
 package de.ddkfm.hcloud
 
 import com.mashape.unirest.http.Unirest
+import com.mashape.unirest.request.GetRequest
+import com.mashape.unirest.request.body.RequestBodyEntity
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
 import org.json.JSONObject
 import java.time.LocalDateTime
-import javax.swing.JFrame
 import java.time.format.DateTimeFormatter
 
 
@@ -16,15 +17,46 @@ class KoHCloud {
         this.auth = "Bearer $token";
     }
 
+    private fun post(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
+        val headers = header ?: emptyMap();
+        return Unirest
+                .post("$endpoint$url")
+                .headers(headers)
+                .header("Authorization", auth)
+                .body(json);
+    }
+
+    private fun put(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
+        val headers = header ?: emptyMap();
+        return Unirest
+                .put("$endpoint$url")
+                .headers(headers)
+                .header("Authorization", auth)
+                .body(json);
+    }
+
+    private fun delete(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
+        val headers = header ?: emptyMap();
+        return Unirest
+                .delete("$endpoint$url")
+                .headers(headers)
+                .header("Authorization", auth)
+                .body(json);
+    }
+
+    private fun get(url : String, header : Map<String, String>?): GetRequest? {
+        val headers = header ?: emptyMap();
+        return Unirest
+                .get("$endpoint$url")
+                .headers(headers)
+                .header("Authorization", auth)
+    }
+
     fun getServers() : List<Server> {
         var url = "$endpoint/servers";
-        var req = Unirest
-                .get("$endpoint/servers")
-                .header("Authorization", auth);
-        val jsonResp = req
-                    .asJson()
-                    .body
-                    .`object`;
+        var req = this.get(url = "/servers", header = null)
+        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
+
         val servers = jsonResp.getJSONArray("servers");
         var returnList = mutableListOf<Server>();
         servers.forEach {
