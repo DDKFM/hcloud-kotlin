@@ -13,13 +13,21 @@ data class location(
         var description : String,
         var country : String,
         var city : String,
-        var latitude : String,
-        var longitude : String
+        var latitude : Double,
+        var longitude : Double
 )
 
 data class server_types(
         var supported: List<Int>,
         var available: List<Int>
 )
-
+data class DCLocation(
+        var id: Int,
+        var name: String,
+        var description: String,
+        var country: String,
+        var city: String,
+        var latitude: Double,
+        var longitude: Double
+)
 
