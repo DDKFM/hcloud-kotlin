@@ -35,7 +35,7 @@ class dev_iso {
         }
         return returnList;
     }
-
+    // get one ISOs
     fun getOneIso(id: String): isoModel{
         var req = Unirest
                 .get("$endpoint/isos/"+id)
