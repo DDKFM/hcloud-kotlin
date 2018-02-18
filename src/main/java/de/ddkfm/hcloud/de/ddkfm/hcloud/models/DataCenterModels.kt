@@ -3,8 +3,7 @@ package de.ddkfm.hcloud.de.ddkfm.hcloud.models
 data class DataCenter(
         var id: Int,
         var name: String,
-        var description: String,
-        var recommendation: Int?
+        var description: String
 )
 
 data class location(
