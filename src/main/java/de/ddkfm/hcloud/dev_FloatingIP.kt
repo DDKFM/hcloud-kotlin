@@ -106,9 +106,19 @@ class dev_FloatingIP {
         return Ip;
     }
 
+    // create a new floating ip address
+    fun createNewFloatingIP(type: String, home_location: String, server: Int, description: String)
+    {
+        // create a further floating ip
+    }
 
+    // update description of a floating IP
+    fun changeDescriptionFloatingIp(id: String, description: String)
+    {
+        // update the description of the floating IP
+    }
 
-
+    // delete a special floating ip
     fun deleteFloatingIps(id: String) : Boolean {
         var req = Unirest
                 .delete("$endpoint/floating_ips/" + id)
