@@ -152,7 +152,7 @@ class KoHCloud {
         var url = "$endpoint/datacenters/"+id;
         var req = this.get(url = "/datacenters/"+id, header = null);
 
-        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
+        val jsonResp = req.asJson().body.`object`;
 
         val jsondatacenter = jsonResp.getJSONObject("datacenter");
 
