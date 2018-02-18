@@ -52,7 +52,6 @@ class dev_iso {
                 description = jsonISO.getString("description"),
                 type = jsonISO.getString("type")
         );
-
         return iso;
     }
 }
