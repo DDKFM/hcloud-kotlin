@@ -120,4 +120,49 @@ class KoHCloud {
         }
         return returnList;
     }
+
+    //
+    // data center branch
+    //
+
+
+    // retrieve all data centers
+    fun getDataCenters() : List<DataCenter> {
+        var url = "$endpoint/datacenters";
+        var req = this.get(url = "/datacenters", header = null)
+        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
+
+        val datacenters = jsonResp.getJSONArray("datacenters");
+        var returnList = mutableListOf<DataCenter>();
+        datacenters.forEach {
+            //Kotlin-Magic: "it" is automatically the current element in the JSONArray
+            val jsonDataCenters : JSONObject = it as JSONObject;
+            var dc = DataCenter(
+                    id = jsonDataCenters.getInt("id"),
+                    name = jsonDataCenters.getString("name"),
+                    description = jsonDataCenters.getString("description")
+            );
+            returnList.add(dc);
+        }
+        return returnList;
+    }
+
+    // get one specific data center like fsn ngb
+    fun getOneDataCenter(id: String): DataCenter {
+        var url = "$endpoint/datacenters/"+id;
+        var req = this.get(url = "/datacenters/"+id, header = null);
+
+        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
+
+        val jsondatacenter = jsonResp.getJSONObject("datacenter");
+
+        var dc = DataCenter(
+                id = jsondatacenter.getInt("id"),
+                name = jsondatacenter.getString("name"),
+                description = jsondatacenter.getString("description")
+                );
+        return dc;
+    }
+
+
 }
