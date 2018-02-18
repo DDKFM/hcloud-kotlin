@@ -47,9 +47,10 @@ open class ApiBase {
     // GET request
     protected fun get(url : String, header : Map<String, String>?): GetRequest? {
         val headers = header ?: emptyMap();
-        return Unirest
+        var resp = Unirest
                 .get("$endpoint$url")
                 .headers(headers)
                 .header("Authorization", auth)
+        return resp;
     }
 }
