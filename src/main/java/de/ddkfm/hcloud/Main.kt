@@ -9,8 +9,10 @@ fun main(args : Array<String>) {
     val token : String = filedata;
     var hCloud = HCloudApi(token = token);
     val servers = hCloud.getServerApi().getServers();
-    servers.forEach { println(it) }
+    for(server in servers)
+        println(server)
 
     val locations = hCloud.getLocationApi().getLocations()
-    locations.forEach { println(it)}
+    for(location in locations)
+        println(location)
 }
