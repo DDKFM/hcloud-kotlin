@@ -1,58 +1,15 @@
 package de.ddkfm.hcloud
 
-import com.mashape.unirest.http.Unirest
-import com.mashape.unirest.request.GetRequest
-import com.mashape.unirest.request.body.RequestBodyEntity
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
 import org.json.JSONObject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Created by maxsc on 18.02.2018.
+ */
+class ServerApi(token : String) : ApiBase(token = token) {
 
-
-class KoHCloud {
-    var auth : String = ""
-    var endpoint : String = "https://api.hetzner.cloud/v1";
-    constructor(token : String) {
-        this.auth = "Bearer $token";
-    }
-    // POST request
-    private fun post(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
-        val headers = header ?: emptyMap();
-        return Unirest
-                .post("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-                .body(json);
-    }
-    // PUT request
-    private fun put(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
-        val headers = header ?: emptyMap();
-        return Unirest
-                .put("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-                .body(json);
-    }
-    // DELETE request
-    private fun delete(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
-        val headers = header ?: emptyMap();
-        return Unirest
-                .delete("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-                .body(json);
-    }
-    // GET request
-    private fun get(url : String, header : Map<String, String>?): GetRequest? {
-        val headers = header ?: emptyMap();
-        return Unirest
-                .get("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-    }
-
-    // get all servers by the project
     fun getServers() : List<Server> {
         var url = "$endpoint/servers";
         var req = this.get(url = "/servers", header = null)
@@ -68,9 +25,9 @@ class KoHCloud {
                     id = jsonServer.getInt("id"),
                     name = jsonServer.getString("name"),
                     backupWindow = if (jsonServer.has("backup_window"))
-                            jsonServer.get("backup_window")?.toString() ?: null
-                        else
-                            null,
+                        jsonServer.get("backup_window")?.toString() ?: null
+                    else
+                        null,
                     created = LocalDateTime.parse(jsonServer.getString("created"), formatter),
                     datacenter = null,
                     image = null,
@@ -104,8 +61,8 @@ class KoHCloud {
                                             .map {
                                                 val dnsPtrEntry = it as JSONObject
                                                 IP(
-                                                  ip = dnsPtrEntry.getString("ip"),
-                                                  dnsPtr = dnsPtrEntry.getString("dns_ptr")
+                                                        ip = dnsPtrEntry.getString("ip"),
+                                                        dnsPtr = dnsPtrEntry.getString("dns_ptr")
                                                 )
                                             }
 
@@ -121,52 +78,4 @@ class KoHCloud {
         }
         return returnList;
     }
-
-
-    /*
-     *
-     * data center functions
-     *
-     */
-
-
-    // retrieve all data centers
-    fun getDataCenters() : List<DataCenter> {
-        var url = "$endpoint/datacenters";
-        var req = this.get(url = "/datacenters", header = null)
-        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
-
-        val datacenters = jsonResp.getJSONArray("datacenters");
-        var returnList = mutableListOf<DataCenter>();
-        datacenters.forEach {
-            //Kotlin-Magic: "it" is automatically the current element in the JSONArray
-            val jsonDataCenters : JSONObject = it as JSONObject;
-            var dc = DataCenter(
-                    id = jsonDataCenters.getInt("id"),
-                    name = jsonDataCenters.getString("name"),
-                    description = jsonDataCenters.getString("description")
-            );
-            returnList.add(dc);
-        }
-        return returnList;
-    }
-
-    // get one specific data center like fsn ngb
-    fun getOneDataCenter(id: String): DataCenter {
-        var url = "$endpoint/datacenters/"+id;
-        var req = this.get(url = "/datacenters/"+id, header = null);
-
-        val jsonResp = req.asJson().body.`object`;
-
-        val jsondatacenter = jsonResp.getJSONObject("datacenter");
-
-        var dc = DataCenter(
-                id = jsondatacenter.getInt("id"),
-                name = jsondatacenter.getString("name"),
-                description = jsondatacenter.getString("description")
-                );
-        return dc;
-    }
-
-
 }

@@ -57,7 +57,7 @@ data class ServerType(
         var prices : Price,
         var storageType : String
 )
-class Server(
+data class Server(
         var id : Int,
         var name : String,
         var status : ServerStatus?,

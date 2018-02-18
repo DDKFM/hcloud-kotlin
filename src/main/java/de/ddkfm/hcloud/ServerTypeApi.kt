@@ -5,13 +5,7 @@ import de.ddkfm.hcloud.de.ddkfm.hcloud.models.ServerType
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
 import org.json.JSONObject
 
-class dev_ServerTypes {
-    var auth : String = ""
-    var endpoint : String = "https://api.hetzner.cloud/v1";
-    constructor(token : String) {
-        this.auth = "Bearer $token";
-    }
-
+class ServerTypeApi(token : String) : ApiBase(token = token) {
     // retrieve all available server types
     fun getServerTypes() : List<ServerType> {
         var req = Unirest

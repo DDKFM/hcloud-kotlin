@@ -1,14 +1,10 @@
 package de.ddkfm.hcloud.de.ddkfm.hcloud.models
 
 import com.mashape.unirest.http.Unirest
+import de.ddkfm.hcloud.ApiBase
 import org.json.JSONObject
 
-class dev_location {
-    var auth : String = ""
-    var endpoint : String = "https://api.hetzner.cloud/v1";
-    constructor(token : String) {
-        this.auth = "Bearer $token";
-    }
+class LocationApi(token : String) : ApiBase(token = token) {
 
     // retrieve all location
     fun getLocations() : List<DCLocation> {
