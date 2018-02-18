@@ -43,8 +43,8 @@ data class PriceEntry(
 
 data class Price(
         var location : String,
-        var hourly : Price,
-        var monthly : Price
+        var hourly : PriceEntry,
+        var monthly : PriceEntry
 )
 
 data class ServerType(
@@ -54,7 +54,7 @@ data class ServerType(
         var cores : Int,
         var memory : Int,
         var disk : Int,
-        var prices : List<Price>,
+        var prices : Price,
         var storageType : String
 )
 class Server(
