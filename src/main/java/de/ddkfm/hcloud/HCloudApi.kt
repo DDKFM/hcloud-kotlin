@@ -26,7 +26,6 @@ class HCloudApi(token: String) : ApiBase(token = token) {
 
     fun getServerTypeApi() : ServerTypeApi = ServerTypeApi(this.token)
 
-
-
+    fun getImagesApi() : ImagesApi = ImagesApi(this.token)
 
 }
