@@ -43,5 +43,35 @@ class ImagesApi(token : String) : ApiBase(token = token) {
         return returnList;
     }
 
+    // get one specific image from ID
+    fun getOneImage(id: Int): image {
+        var req = Unirest
+                .get("$endpoint/images/" + id)
+                .header("Authorization", auth);
+        val jsonResp = req
+                .asJson()
+                .body
+                .`object`;
+        val jsonImages = jsonResp.getJSONObject("image");
 
+        var aImage = image(
+                id = jsonImages.getInt("id"),
+                type = jsonImages.getString("type"),
+                status = jsonImages.getString("status"),
+                name = jsonImages.getString("name"),
+                description = jsonImages.getString("description"),
+                ImageSize = jsonImages.getDouble("image_size"),
+                DiskSize = jsonImages.getDouble("disk_size"),
+                created = jsonImages.getString("created"),
+                createdFrom = CreateFromData(
+                        id = jsonResp.getJSONObject("created_from").getInt("id"),
+                        name = jsonResp.getJSONObject("created_from").getString("name")
+                ),
+                BoundTo = jsonImages.getInt("bound_to"),
+                OsFlavor = jsonImages.getString("os_flavor"),
+                OsVersion = jsonImages.getString("os_version"),
+                RapidDeploy = jsonImages.getBoolean("rapid_deploy")
+        )
+        return aImage;
+    }
 }
