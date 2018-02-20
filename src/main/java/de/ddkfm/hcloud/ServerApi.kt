@@ -100,8 +100,9 @@ class ServerApi(token : String) : ApiBase(token = token) {
                         JSONObject("{\"name\": \"$name\""))
         return this.mapServer(resp?.asJson()?.body?.`object` ?: null);
     }
-    fun deleteServer(id : Int) : Action? {
-        var resp = this.delete("/servers/$id", null, JSONObject());
+
+    fun Server.delete() : Action? {
+        var resp = delete("/servers/${this.id}", null, JSONObject());
         var json = resp?.asJson()?.body?.`object`?.getJSONObject("action") ?: return null;
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         return Action(
@@ -112,10 +113,10 @@ class ServerApi(token : String) : ApiBase(token = token) {
                 started = LocalDateTime.parse(json.getString("started"), formatter),
                 finished = LocalDateTime.parse(json.getString("finished"), formatter),
                 resources = json.getJSONArray("resources")
-                            .map { Resource(
-                                    id = (it as JSONObject).getInt("id"),
-                                    type = (it as JSONObject).getString("type")
-                            )},
+                        .map { Resource(
+                                id = (it as JSONObject).getInt("id"),
+                                type = (it as JSONObject).getString("type")
+                        )},
                 error = Error(
                         code = json.getJSONObject("error").getString("code"),
                         message = json.getJSONObject("error").getString("message")
