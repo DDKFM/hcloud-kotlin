@@ -3,6 +3,7 @@ package de.ddkfm.hcloud
 import com.mashape.unirest.http.Unirest
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.DCLocation
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.FloatingIP
+import de.ddkfm.hcloud.de.ddkfm.hcloud.models.Server
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.dns
 import org.json.JSONObject
 
@@ -107,9 +108,11 @@ class FloatingIPApi(token : String) : ApiBase(token = token) {
     }
 
     // update description of a floating IP
-    fun changeDescriptionFloatingIp(id: String, description: String)
-    {
-        // update the description of the floating IP
+    fun changeDescriptionFloatingIp(id: Int, description: String): Boolean {
+            var resp = this.put("/floating_ip/$id",
+                    mapOf("Content-Type" to "application/json"),
+                    JSONObject("{\"description\": \"$description\"}"))
+            return true;
     }
 
     // delete a special floating ip
