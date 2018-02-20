@@ -2,6 +2,7 @@ package de.ddkfm.hcloud
 
 import com.mashape.unirest.request.body.RequestBodyEntity
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -101,8 +102,8 @@ class ServerApi(token : String) : ApiBase(token = token) {
         return this.mapServer(resp?.asJson()?.body?.`object` ?: null);
     }
 
-    fun Server.delete() : Action? {
-        var resp = delete("/servers/${this.id}", null, JSONObject());
+    fun deleteServer(id : Int) : Action? {
+        var resp = delete("/servers/$id", null, JSONObject());
         var json = resp?.asJson()?.body?.`object`?.getJSONObject("action") ?: return null;
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         return Action(
@@ -122,5 +123,25 @@ class ServerApi(token : String) : ApiBase(token = token) {
                         message = json.getJSONObject("error").getString("message")
                 )
         )
+    }
+    fun createServer(name : String, type : String, startAfterCreate : Boolean, image: String/*TODO: get image from serverobject and not from a parameter*/, sshKeys : List<Int>, userData: String) : Server? {
+        var serverObj = JSONObject();
+        serverObj.put("name", name)
+        serverObj.put("server_type", type)
+        serverObj.put("start_after_create", startAfterCreate)
+        serverObj.put("image", image)
+        serverObj.put("ssh_keys", JSONArray(sshKeys))
+        serverObj.put("user_data", userData)
+        var req = post(url = "/servers", header = mapOf("Content-Type" to "application/json"), json = serverObj)
+        var resp = req?.asJson()
+        if(resp?.status == 201) {
+            val returnServer = mapServer(resp?.body?.`object`?.getJSONObject("server")) ?: return null;
+            return returnServer;
+        } else {
+            print(resp?.status)
+            print(resp?.statusText)
+            print(resp?.body)
+            return null
+        }
     }
 }

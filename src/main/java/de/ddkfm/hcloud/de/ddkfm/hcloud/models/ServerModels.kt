@@ -48,29 +48,29 @@ data class Price(
 )
 
 data class ServerType(
-        var id : Int,
-        var name : String,
-        var description : String,
-        var cores : Int,
-        var memory : Int,
-        var disk : Int,
-        var prices : Price,
-        var storageType : String
+        var id : Int? = null,
+        var name : String? = null,
+        var description : String? = null,
+        var cores : Int? = null,
+        var memory : Int? = null,
+        var disk : Int? = null,
+        var prices : Price? = null,
+        var storageType : String? = null
 )
 data class Server(
-        var id : Int,
-        var name : String,
-        var status : ServerStatus?,
-        var created : LocalDateTime?,
-        var publicNet : PublicNetwork?,
-        var type : ServerType?,
-        var datacenter : Any?,//TODO implement DataCenter later
-        var image : Any?, //TODO implement Image later
-        var iso : Any?, //TODO implement ISO later,
-        var rescueEnabled : Boolean?,
-        var locked : Boolean?,
-        var backupWindow : String?,
-        var outgoingTraffic : Int?,
-        var incomingTraffic : Int?,
-        var includedTraffic : Int?
+        var id : Int? = null,
+        var name : String? = null,
+        var status : ServerStatus? = null,
+        var created : LocalDateTime? = null,
+        var publicNet : PublicNetwork? = null,
+        var type : ServerType? = null,
+        var datacenter : Any? = null,//TODO implement DataCenter later
+        var image : Any? = null, //TODO implement Image later
+        var iso : Any? = null, //TODO implement ISO later,
+        var rescueEnabled : Boolean? = null,
+        var locked : Boolean? = null,
+        var backupWindow : String? = null,
+        var outgoingTraffic : Int? = null,
+        var incomingTraffic : Int? = null,
+        var includedTraffic : Int? = null
 )
