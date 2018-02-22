@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter
  */
 class ServerApi(token : String) : ApiBase(token = token) {
 
+    // retrieve all server of a project
     fun getServers(name : String?) : List<Server?> {
         var url = "$endpoint/servers" + (if(name != null) "?name=$name" else "");
         var req = this.get(url = "/servers", header = null)
@@ -28,7 +29,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
         }
         return returnList;
     }
-
+    // retrieve a specified server from id
     fun getServer(id : Int) : Server? {
         var req = this.get("/servers/$id", null);
         var resp = req?.asJson()?.body?.`object` ?: return null;
@@ -37,6 +38,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
         return this.mapServer(jsonServer);
     }
 
+    // map for data return of the server modules
     private fun mapServer(obj : JSONObject?) : Server? {
         if(obj == null)
             return null;
@@ -95,6 +97,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
                 type = null
         );
     }
+    //change attributes of a specified server from id
     fun changeServername(id : Int, name : String) : Server? {
         var resp = this.put("/servers/$id",
                         mapOf("Content-Type" to "application/json"),
@@ -102,6 +105,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
         return this.mapServer(resp?.asJson()?.body?.`object` ?: null);
     }
 
+    // delete the specified server
     fun deleteServer(id : Int) : Action? {
         var resp = delete("/servers/$id", null, JSONObject());
         var json = resp?.asJson()?.body?.`object`?.getJSONObject("action") ?: return null;
@@ -124,6 +128,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
                 )
         )
     }
+    // create a new server
     fun createServer(name : String, type : String, startAfterCreate : Boolean, image: String/*TODO: get image from serverobject and not from a parameter*/, sshKeys : List<Int>, userData: String) : Server? {
         var serverObj = JSONObject();
         serverObj.put("name", name)

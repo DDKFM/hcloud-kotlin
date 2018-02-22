@@ -60,7 +60,7 @@ class FloatingIPApi(token : String) : ApiBase(token = token) {
     }
 
     // retrieve specific floating IP
-    fun getSpecificFloatingIP(id: String) : FloatingIP {
+    fun getSpecificFloatingIP(id: Int) : FloatingIP {
         var req = Unirest
                 .get("$endpoint/floating_ips/"+id)
                 .header("Authorization", auth);
@@ -124,7 +124,7 @@ class FloatingIPApi(token : String) : ApiBase(token = token) {
     }
 
     // delete a special floating ip
-    fun deleteFloatingIps(id: String) : Boolean {
+    fun deleteFloatingIps(id: Int) : Boolean {
         var req = Unirest
                 .delete("$endpoint/floating_ips/" + id)
                 .header("Authorization", auth);

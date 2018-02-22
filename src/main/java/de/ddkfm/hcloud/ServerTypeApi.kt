@@ -54,8 +54,8 @@ class ServerTypeApi(token : String) : ApiBase(token = token) {
         return returnList;
     }
 
-    // retrieve a server types
-    fun getOneServerTypes(id: String) : ServerType {
+    // retrieve a specified server type
+    fun getOneServerTypes(id: Int) : ServerType {
         var req = Unirest
                 .get("$endpoint/server_types/" + id)
                 .header("Authorization", auth);

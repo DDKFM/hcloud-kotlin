@@ -31,7 +31,7 @@ class IsoApi(token : String) : ApiBase(token = token) {
         return returnList;
     }
     // get one ISOs
-    fun getOneIso(id: String): isoModel{
+    fun getOneIso(id: Int): isoModel{
         var req = Unirest
                 .get("$endpoint/isos/"+id)
                 .header("Authorization", auth);

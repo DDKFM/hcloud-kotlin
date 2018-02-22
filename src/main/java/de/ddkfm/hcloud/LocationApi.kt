@@ -35,7 +35,7 @@ class LocationApi(token : String) : ApiBase(token = token) {
     }
 
     // get one specific location like fsn ngb
-    fun getOneLocation(id: String): DCLocation {
+    fun getOneLocation(id: Int): DCLocation {
         var req = Unirest
                 .get("$endpoint/locations/" + id)
                 .header("Authorization", auth);

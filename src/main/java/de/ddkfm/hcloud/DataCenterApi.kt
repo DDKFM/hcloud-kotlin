@@ -30,7 +30,7 @@ class DataCenterApi(token : String) : ApiBase(token = token) {
     }
 
     // get one specific data center like fsn ngb
-    fun getOneDataCenter(id: String): DataCenter {
+    fun getOneDataCenter(id: Int): DataCenter {
         var req = Unirest
                 .get("$endpoint/datacenters/" + id)
                 .header("Authorization", auth);

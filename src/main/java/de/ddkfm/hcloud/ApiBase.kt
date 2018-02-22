@@ -8,7 +8,7 @@ import org.json.JSONObject
 /**
  * Created by maxsc on 18.02.2018.
  */
-
+// all base function are included here
 open class ApiBase {
     var token : String = ""
     var auth : String = ""
