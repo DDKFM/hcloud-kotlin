@@ -17,10 +17,10 @@ data class Resource(
 data class Action(
         var id : Int,
         var command : String,
-        var status : ServerStatus,
+        var status : String,
         var progress : Int,
-        var started : LocalDateTime,
-        var finished : LocalDateTime,
-        var resources : List<Resource>,
+        var started : String,
+        var finished : String,
+        var resources : Resource,
         var error : Error
 )
