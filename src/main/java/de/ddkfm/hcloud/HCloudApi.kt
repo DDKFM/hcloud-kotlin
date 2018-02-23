@@ -28,4 +28,6 @@ class HCloudApi(token: String) : ApiBase(token = token) {
 
     fun getImagesApi() : ImagesApi = ImagesApi(this.token)
 
+    fun getActionsApi() : ActionApi = ActionApi(this.token)
+
 }
