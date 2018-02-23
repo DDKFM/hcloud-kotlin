@@ -5,7 +5,7 @@ import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
 
 class PricesApi(token : String) : ApiBase(token = token) {
 
-    // get one specific data center like fsn ngb
+    // get all prices by hetzner cloud
     fun getOPrice(id: Int): price {
         var req = Unirest
                 .get("$endpoint/pricing" + id)
