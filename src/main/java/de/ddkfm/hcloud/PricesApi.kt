@@ -6,7 +6,7 @@ import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
 class PricesApi(token : String) : ApiBase(token = token) {
 
     // get all prices by hetzner cloud
-    fun getOPrice(id: Int): price {
+    fun getPrice(id: Int): price {
         var req = Unirest
                 .get("$endpoint/pricing" + id)
                 .header("Authorization", auth);
@@ -20,30 +20,30 @@ class PricesApi(token : String) : ApiBase(token = token) {
                 currency = jsonPrice.getString("currency"),
                 varRate = jsonPrice.getString("vat_rate"),
                 image = priceInformation(
-                        net = jsonResp.getJSONObject("image").getJSONObject("price_per_gb_month").getString("net"),
-                        gross = jsonResp.getJSONObject("image").getJSONObject("price_per_gb_month").getString("gross")
+                        net = jsonPrice.getJSONObject("image").getJSONObject("price_per_gb_month").getString("net"),
+                        gross = jsonPrice.getJSONObject("image").getJSONObject("price_per_gb_month").getString("gross")
                 ),
                 floatingIP = priceInformation(
-                        net = jsonResp.getJSONObject("floating_ip").getJSONObject("price_monthly").getString("net"),
-                        gross = jsonResp.getJSONObject("floating_ip").getJSONObject("price_monthly").getString("gross")
+                        net = jsonPrice.getJSONObject("floating_ip").getJSONObject("price_monthly").getString("net"),
+                        gross = jsonPrice.getJSONObject("floating_ip").getJSONObject("price_monthly").getString("gross")
                 ),
                 traffic = priceInformation(
-                        net = jsonResp.getJSONObject("traffic").getJSONObject("price_per_tb").getString("net"),
-                        gross = jsonResp.getJSONObject("traffic").getJSONObject("price_per_tb").getString("gross")
+                        net = jsonPrice.getJSONObject("traffic").getJSONObject("price_per_tb").getString("net"),
+                        gross = jsonPrice.getJSONObject("traffic").getJSONObject("price_per_tb").getString("gross")
                 ),
-                ServerBackup = jsonResp.getJSONObject("server_backup").getString("percentage"),
+                ServerBackup = jsonPrice.getJSONObject("server_backup").getString("percentage"),
                 ServerTypes = ServerPrice(
-                        id = jsonResp.getJSONObject("server_types").getInt("id"),
-                        name = jsonResp.getJSONObject("server_types").getString("name"),
+                        id = jsonPrice.getJSONObject("server_types").getInt("id"),
+                        name = jsonPrice.getJSONObject("server_types").getString("name"),
                         price = pricesServerModel(
-                                location = jsonResp.getJSONObject("server_types").getJSONObject("prices").getString("location"),
+                                location = jsonPrice.getJSONObject("server_types").getJSONObject("prices").getString("location"),
                                 priceHour = priceInformation(
-                                        net = jsonResp.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_hourly").getString("net"),
-                                        gross = jsonResp.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_hourly").getString("gross")
+                                        net = jsonPrice.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_hourly").getString("net"),
+                                        gross = jsonPrice.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_hourly").getString("gross")
                                 ),
                                 priceMonth = priceInformation(
-                                        net = jsonResp.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_monthly").getString("net"),
-                                        gross = jsonResp.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_monthly").getString("net")
+                                        net = jsonPrice.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_monthly").getString("net"),
+                                        gross = jsonPrice.getJSONObject("server_types").getJSONObject("prices").getJSONObject("price_monthly").getString("net")
                                 )
                         )
                 )
