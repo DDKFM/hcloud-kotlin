@@ -20,4 +20,8 @@ https://console.hetzner.cloud/
         println(location)
 ```
 
+**Contributing**
 
+Feel free to open issues on GitHub or fork the repository.
+
+Any feedback is welcome!
