@@ -8,7 +8,7 @@ import org.json.JSONObject
 /**
  * Created by maxsc on 18.02.2018.
  */
-// all base function are included here
+
 open class ApiBase {
     var token : String = ""
     var auth : String = ""
@@ -20,37 +20,56 @@ open class ApiBase {
     // POST request
     protected fun post(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
         val headers = header ?: emptyMap();
-        return Unirest
-                .post("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-                .body(json);
+        return try {
+            Unirest
+                    .post("$endpoint$url")
+                    .headers(headers)
+                    .header("Authorization", auth)
+                    .body(json);
+        } catch (e: Exception) {
+            println("Error in POST-Methode with url: $url, header: $header, json: $json");
+            null;
+        }
     }
     // PUT request
     protected fun put(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
         val headers = header ?: emptyMap();
-        return Unirest
-                .put("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-                .body(json);
+        return try {
+            Unirest
+                    .put("$endpoint$url")
+                    .headers(headers)
+                    .header("Authorization", auth)
+                    .body(json);
+        } catch(e : Exception) {
+            println("Error in PUT-Methode with url: $url, header: $header, json: $json");
+            null;
+        }
     }
     // DELETE request
     protected fun delete(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
         val headers = header ?: emptyMap();
-        return Unirest
-                .delete("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-                .body(json);
+        return try {
+            Unirest
+                    .delete("$endpoint$url")
+                    .headers(headers)
+                    .header("Authorization", auth)
+                    .body(json);
+        } catch(e : Exception) {
+            println("Error in DELETE-Methode with url: $url, header: $header, json: $json");
+            null
+        }
     }
     // GET request
     protected fun get(url : String, header : Map<String, String>?): GetRequest? {
         val headers = header ?: emptyMap();
-        var resp = Unirest
-                .get("$endpoint$url")
-                .headers(headers)
-                .header("Authorization", auth)
-        return resp;
+        return try {
+            Unirest
+                    .get("$endpoint$url")
+                    .headers(headers)
+                    .header("Authorization", auth)
+        } catch(e : Exception) {
+            println("Error in GET-Methode with url: $url, header: $header");
+            null
+        }
     }
 }

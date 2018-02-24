@@ -1,4 +1,4 @@
-package de.ddkfm.hcloud.de.ddkfm.hcloud.models
+package de.ddkfm.hcloud.models
 
 data class FloatingIP(
         var id: Int,

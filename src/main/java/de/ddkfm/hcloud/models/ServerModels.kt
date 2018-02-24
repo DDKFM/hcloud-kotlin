@@ -1,4 +1,4 @@
-package de.ddkfm.hcloud.de.ddkfm.hcloud.models
+package de.ddkfm.hcloud.models
 
 import java.time.LocalDateTime
 

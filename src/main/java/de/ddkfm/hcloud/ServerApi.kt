@@ -1,7 +1,6 @@
 package de.ddkfm.hcloud
 
-import com.mashape.unirest.request.body.RequestBodyEntity
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
+import de.ddkfm.hcloud.models.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDateTime

@@ -1,4 +1,4 @@
-package de.ddkfm.hcloud.de.ddkfm.hcloud.models
+package de.ddkfm.hcloud.models
 
 import org.apache.commons.cli.CommandLineParser
 import org.apache.commons.cli.DefaultParser
