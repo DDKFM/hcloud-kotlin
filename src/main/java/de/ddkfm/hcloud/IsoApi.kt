@@ -2,6 +2,7 @@ package de.ddkfm.hcloud.de.ddkfm.hcloud.models
 
 import com.mashape.unirest.http.Unirest
 import de.ddkfm.hcloud.ApiBase
+import de.ddkfm.hcloud.models.isoModel
 import org.json.JSONObject
 
 class IsoApi(token : String) : ApiBase(token = token) {

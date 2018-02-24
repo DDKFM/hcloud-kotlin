@@ -11,6 +11,8 @@ enum class ServerStatus{
     deleting,
     migrating,
     rebuilding,
+    success,
+    error,
     unknown
 }
 data class IP(

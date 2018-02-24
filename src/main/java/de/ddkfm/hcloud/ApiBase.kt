@@ -1,8 +1,12 @@
 package de.ddkfm.hcloud
 
+import com.mashape.unirest.http.HttpResponse
+import com.mashape.unirest.http.JsonNode
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.request.GetRequest
-import com.mashape.unirest.request.body.RequestBodyEntity
+import com.mashape.unirest.request.HttpRequest
+import com.mashape.unirest.request.HttpRequestWithBody
+import org.apache.log4j.LogManager
 import org.json.JSONObject
 
 /**
@@ -12,64 +16,68 @@ import org.json.JSONObject
 open class ApiBase {
     var token : String = ""
     var auth : String = ""
+    protected val logger = LogManager.getLogger("HCloud-Kotlin")
     var endpoint : String = "https://api.hetzner.cloud/v1";
     constructor(token : String) {
         this.token = token;
         this.auth = "Bearer $token";
     }
-    // POST request
-    protected fun post(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
-        val headers = header ?: emptyMap();
-        return try {
-            Unirest
-                    .post("$endpoint$url")
-                    .headers(headers)
-                    .header("Authorization", auth)
-                    .body(json);
-        } catch (e: Exception) {
-            println("Error in POST-Methode with url: $url, header: $header, json: $json");
-            null;
+
+    private fun request(type : String, url : String, header : Map<String, String>?, json : JSONObject? = null) : HttpResponse<JsonNode>? {
+        val url = "$endpoint$url"
+        var req : HttpRequest? =
+                when(type.toLowerCase()) {
+                    "get" -> Unirest.get(url)
+                    "post" -> Unirest.post(url)
+                    "put" -> Unirest.put(url)
+                    "delete" -> Unirest.delete(url)
+                    else -> null
+               }
+        var headers = header ?: emptyMap();
+        var reqWithHeaders = req?.headers(headers)?.header("Authorization", auth) ?: return null
+        var resp =
+                try {
+                    if (reqWithHeaders is GetRequest?) {
+                        var getReq = reqWithHeaders as GetRequest?
+                        getReq?.asJson();
+                    } else
+                        if (reqWithHeaders is HttpRequestWithBody?) {
+                            var changeReq = reqWithHeaders as HttpRequestWithBody?
+                            if (json != null) {
+                                changeReq?.body(json)?.asJson()
+                            } else
+                                changeReq?.asJson()
+                        } else
+                            null
+                } catch(e : Exception) {
+                    logger.error("$type-Request failed: ", e)
+                    null
+                }
+        when(resp?.status) {
+            200, 201 -> {
+                logger.debug("Resp: ${resp?.body?.toString()}")
+                return resp
+            }
+            else -> {
+                logger.error("$type-Request failed: [${resp?.status}: ${resp?.statusText}] Response: ${resp?.body.toString()}")
+                return null
+            }
         }
+    }
+    // POST request
+    protected fun post(url : String, header : Map<String, String>?, json : JSONObject): JSONObject? {
+        return this.request("POST", url, header, json)?.body?.`object`
     }
     // PUT request
-    protected fun put(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
-        val headers = header ?: emptyMap();
-        return try {
-            Unirest
-                    .put("$endpoint$url")
-                    .headers(headers)
-                    .header("Authorization", auth)
-                    .body(json);
-        } catch(e : Exception) {
-            println("Error in PUT-Methode with url: $url, header: $header, json: $json");
-            null;
-        }
+    protected fun put(url : String, header : Map<String, String>?, json : JSONObject): JSONObject? {
+        return this.request("PUT", url, header, json)?.body?.`object`
     }
     // DELETE request
-    protected fun delete(url : String, header : Map<String, String>?, json : JSONObject): RequestBodyEntity? {
-        val headers = header ?: emptyMap();
-        return try {
-            Unirest
-                    .delete("$endpoint$url")
-                    .headers(headers)
-                    .header("Authorization", auth)
-                    .body(json);
-        } catch(e : Exception) {
-            println("Error in DELETE-Methode with url: $url, header: $header, json: $json");
-            null
-        }
+    protected fun delete(url : String, header : Map<String, String>?, json : JSONObject): JSONObject? {
+        return this.request("DELETE", url, header, json)?.body?.`object`
     }
     // GET request
-    protected fun get(url : String, header : Map<String, String>?): GetRequest? {
-        val headers = header ?: emptyMap();
-        return try {
-            Unirest
-                    .get("$endpoint$url")
-                    .headers(headers)
-                    .header("Authorization", auth)
-        } catch(e : Exception) {
-            println("Error in GET-Methode with url: $url, header: $header");
-            null
-        }
+    protected fun get(url : String, header : Map<String, String>?): JSONObject? {
+        return this.request("GET", url, header)?.body?.`object`
     }
 }

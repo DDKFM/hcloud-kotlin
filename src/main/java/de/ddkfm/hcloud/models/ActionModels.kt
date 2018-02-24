@@ -22,5 +22,5 @@ data class Action(
         var started: LocalDateTime,
         var finished: LocalDateTime,
         var resources: List<Resource>,
-        var error: Error
+        var error: Error?
 )

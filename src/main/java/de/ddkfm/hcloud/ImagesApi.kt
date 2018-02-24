@@ -1,8 +1,8 @@
 package de.ddkfm.hcloud
 
 import com.mashape.unirest.http.Unirest
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.CreateFromData
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.image
+import de.ddkfm.hcloud.models.CreateFromData
+import de.ddkfm.hcloud.models.image
 import org.json.JSONObject
 
 class ImagesApi(token : String) : ApiBase(token = token) {
@@ -11,7 +11,7 @@ class ImagesApi(token : String) : ApiBase(token = token) {
     fun getImages(): List<image> {
         var url = "$endpoint/images";
         var req = this.get(url = "/images", header = null)
-        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
+        val jsonResp = req ?: return emptyList();
 
         val Images = jsonResp.getJSONArray("servers");
         var returnList = mutableListOf<image>();

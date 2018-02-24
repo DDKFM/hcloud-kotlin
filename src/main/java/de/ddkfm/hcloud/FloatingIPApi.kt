@@ -1,10 +1,9 @@
 package de.ddkfm.hcloud
 
 import com.mashape.unirest.http.Unirest
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.DCLocation
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.FloatingIP
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.Server
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.dns
+import de.ddkfm.hcloud.models.DCLocation
+import de.ddkfm.hcloud.models.FloatingIP
+import de.ddkfm.hcloud.models.dns
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -110,8 +109,6 @@ class FloatingIPApi(token : String) : ApiBase(token = token) {
         FloatingIPObj.put("server", server);
         FloatingIPObj.put("description", description);
         var req = post(url = "/floating_ips", header = mapOf("Content-Type" to "application/json"), json = FloatingIPObj);
-        req?.asJson();
-
         return true;
     }
 

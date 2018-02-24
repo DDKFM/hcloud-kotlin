@@ -1,8 +1,9 @@
 package de.ddkfm.hcloud
 
 import com.mashape.unirest.http.Unirest
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.ServerType
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
+import de.ddkfm.hcloud.models.Price
+import de.ddkfm.hcloud.models.PriceEntry
+import de.ddkfm.hcloud.models.ServerType
 import org.json.JSONObject
 
 class ServerTypeApi(token : String) : ApiBase(token = token) {

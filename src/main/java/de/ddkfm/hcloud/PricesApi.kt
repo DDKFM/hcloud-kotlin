@@ -2,6 +2,10 @@ package de.ddkfm.hcloud
 
 import com.mashape.unirest.http.Unirest
 import de.ddkfm.hcloud.de.ddkfm.hcloud.models.*
+import de.ddkfm.hcloud.models.ServerPrice
+import de.ddkfm.hcloud.models.price
+import de.ddkfm.hcloud.models.priceInformation
+import de.ddkfm.hcloud.models.pricesServerModel
 
 class PricesApi(token : String) : ApiBase(token = token) {
 

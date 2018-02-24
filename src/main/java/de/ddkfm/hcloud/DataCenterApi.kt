@@ -1,7 +1,8 @@
-package de.ddkfm.hcloud.de.ddkfm.hcloud.models
+package de.ddkfm.hcloud
 
 import com.mashape.unirest.http.Unirest
 import de.ddkfm.hcloud.ApiBase
+import de.ddkfm.hcloud.models.DataCenter
 import org.json.JSONObject
 
 class DataCenterApi(token : String) : ApiBase(token = token) {

@@ -12,10 +12,9 @@ import java.time.format.DateTimeFormatter
 class ServerApi(token : String) : ApiBase(token = token) {
 
     // retrieve all server of a project
-    fun getServers(name : String?) : List<Server?> {
+    fun getServers(name : String? = null) : List<Server?> {
         var url = "$endpoint/servers" + (if(name != null) "?name=$name" else "");
-        var req = this.get(url = "/servers", header = null)
-        val jsonResp = req?.asJson()?.body?.`object` ?: return emptyList();
+        var jsonResp = this.get(url = "/servers", header = null) ?: return emptyList();
 
         val servers = jsonResp.getJSONArray("servers");
         var returnList = mutableListOf<Server?>();
@@ -30,10 +29,8 @@ class ServerApi(token : String) : ApiBase(token = token) {
     }
     // retrieve a specified server from id
     fun getServer(id : Int) : Server? {
-        var req = this.get("/servers/$id", null);
-        var resp = req?.asJson()?.body?.`object` ?: return null;
+        var resp = this.get("/servers/$id", null) ?: return null;
         var jsonServer = resp.getJSONObject("server");
-
         return this.mapServer(jsonServer);
     }
 
@@ -101,13 +98,13 @@ class ServerApi(token : String) : ApiBase(token = token) {
         var resp = this.put("/servers/$id",
                         mapOf("Content-Type" to "application/json"),
                         JSONObject("{\"name\": \"$name\""))
-        return this.mapServer(resp?.asJson()?.body?.`object` ?: null);
+        return this.mapServer(resp ?: null);
     }
 
     // delete the specified server
     fun deleteServer(id : Int) : Action? {
         var resp = delete("/servers/$id", null, JSONObject());
-        var json = resp?.asJson()?.body?.`object`?.getJSONObject("action") ?: return null;
+        var json = resp?.getJSONObject("action") ?: return null;
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         return Action(
                 id = json.getInt("id"),
@@ -136,16 +133,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
         serverObj.put("image", image)
         serverObj.put("ssh_keys", JSONArray(sshKeys))
         serverObj.put("user_data", userData)
-        var req = post(url = "/servers", header = mapOf("Content-Type" to "application/json"), json = serverObj)
-        var resp = req?.asJson()
-        if(resp?.status == 201) {
-            val returnServer = mapServer(resp?.body?.`object`?.getJSONObject("server")) ?: return null;
-            return returnServer;
-        } else {
-            print(resp?.status)
-            print(resp?.statusText)
-            print(resp?.body)
-            return null
-        }
+        var resp = post(url = "/servers", header = mapOf("Content-Type" to "application/json"), json = serverObj)
+        return mapServer(resp?.getJSONObject("server")) ?: return null;
     }
 }

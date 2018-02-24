@@ -1,19 +1,26 @@
 package de.ddkfm.hcloud
 
-import com.mashape.unirest.http.Unirest
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.Server
-import de.ddkfm.hcloud.de.ddkfm.hcloud.models.ServerType
+import org.apache.commons.logging.impl.Log4JLogger
+import org.apache.log4j.*
 import java.io.File
 
-fun main(args : Array<String>) {
-    //var filedata = File("./token.txt").readText();
-    //filedata = filedata.trim().replace("\\n", "").replace("\\t", "");
-    //val token : String = filedata;
-    var hCloud = HCloudApi(token = "");
-    //var server = hCloud.getServerApi().createServer("kotlinDevServer", "cx11", false, "ubuntu-16.04", emptyList(), "");
-    //if(server != null)
-    //    hCloud.getServerApi().deleteServer(server.id!!);
-    //println(server)
 
-    hCloud.getFloatingIPApi().createFloatingIP("ipv4");
+fun main(args : Array<String>) {
+    var filedata = File("./token_own.txt").readText();
+    filedata = filedata.trim().replace("\\n", "").replace("\\t", "");
+    val token : String = filedata;
+
+    //Init Log4J
+    val layout = PatternLayout("%r [%t] %p %c[%F:%L] %x - %m%n")
+    var appender = ConsoleAppender(layout)
+    appender.name = "ConsoleAppender"
+    appender.threshold = Level.DEBUG
+    appender.activateOptions()
+    LogManager.getLogger("HCloud-Kotlin").addAppender(appender)
+
+    var hCloud = HCloudApi(token);
+    val servers = hCloud.getServerApi().getServer(505273)
+    println(servers)
+    val actions = hCloud.getActionsApi().getActions()
+    println(actions)
 }
