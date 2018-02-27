@@ -18,7 +18,7 @@ class PricesApi(token : String) : ApiBase(token = token) {
                 .asJson()
                 .body
                 .`object`;
-        val jsonPrice = jsonResp.getJSONObject("pricing");
+        val jsonPrice = jsonResp.getJSONObject("pricing")
 
         var ServerPrice = price(
                 currency = jsonPrice.getString("currency"),
