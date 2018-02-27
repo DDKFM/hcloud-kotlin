@@ -1,5 +1,6 @@
 package de.ddkfm.hcloud.models
 
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 enum class ServerStatus{
@@ -75,4 +76,20 @@ data class Server(
         var outgoingTraffic : Int? = null,
         var incomingTraffic : Int? = null,
         var includedTraffic : Int? = null
+)
+
+data class TimeSeries(
+        var name : String,
+        var values : MutableList<MetricsData>
+)
+data class MetricsData(
+        var time : LocalDateTime,
+        var value : BigDecimal
+)
+data class Metrics(
+        var start : LocalDateTime,
+        var end : LocalDateTime,
+        var step : Int,
+        var timeSeries : MutableList<TimeSeries>
+
 )

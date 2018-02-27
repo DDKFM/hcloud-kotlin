@@ -3,7 +3,8 @@ package de.ddkfm.hcloud
 import de.ddkfm.hcloud.models.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.time.LocalDateTime
+import java.math.BigDecimal
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 /**
@@ -97,13 +98,13 @@ class ServerApi(token : String) : ApiBase(token = token) {
     fun changeServername(id : Int, name : String) : Server? {
         var resp = this.put("/servers/$id",
                         mapOf("Content-Type" to "application/json"),
-                        JSONObject("{\"name\": \"$name\""))
-        return this.mapServer(resp ?: null);
+                        JSONObject("{\"name\": \"$name\"}"))
+        return this.mapServer(resp?.getJSONObject("server") ?: null);
     }
 
     // delete the specified server
     fun deleteServer(id : Int) : Action? {
-        var resp = delete("/servers/$id", null, JSONObject());
+        var resp = delete("/servers/$id", mapOf("Content-Type" to "application/json"), JSONObject());
         var json = resp?.getJSONObject("action") ?: return null;
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         return Action(
@@ -118,10 +119,13 @@ class ServerApi(token : String) : ApiBase(token = token) {
                                 id = (it as JSONObject).getInt("id"),
                                 type = (it as JSONObject).getString("type")
                         )},
-                error = Error(
-                        code = json.getJSONObject("error").getString("code"),
-                        message = json.getJSONObject("error").getString("message")
-                )
+                error = if(json.isNull("error"))
+                            null
+                        else
+                            Error(
+                                code = json.getJSONObject("error").getString("code"),
+                                message = json.getJSONObject("error").getString("message")
+                            )
         )
     }
     // create a new server
@@ -135,5 +139,45 @@ class ServerApi(token : String) : ApiBase(token = token) {
         serverObj.put("user_data", userData)
         var resp = post(url = "/servers", header = mapOf("Content-Type" to "application/json"), json = serverObj)
         return mapServer(resp?.getJSONObject("server")) ?: return null;
+    }
+
+    fun getMetrics(id : Int, type : List<String>, start : LocalDateTime, end : LocalDateTime, step : Int? = null) : Metrics? {
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        var typeString = type.joinToString(separator = ",")
+        var formatedStart = start.format(formatter)
+        var formatedEnd = end.format(formatter)
+        var formatedStep = "&step=$step" ?: ""
+        var url = "/servers/$id/metrics?type=$typeString&start=$formatedStart&end=$formatedEnd$step"
+        var resp = this.get(url = url, header = null);
+        var jsonMetrics = resp?.getJSONObject("metrics") ?: return null
+        var metrics = Metrics(
+                start = LocalDateTime.parse(jsonMetrics.getString("start"), formatter),
+                end = LocalDateTime.parse(jsonMetrics.getString("end"), formatter),
+                step = jsonMetrics.getInt("step"),
+                timeSeries = mutableListOf()
+        )
+        var jsonTimeSeries = jsonMetrics.getJSONObject("time_series");
+        for(key in jsonTimeSeries.keySet()) {
+            var jsonMetric = jsonTimeSeries.getJSONObject(key);
+            var metric = TimeSeries(
+                    name = key,
+                    values = mutableListOf()
+            )
+            var jsonValues = jsonMetric.getJSONArray("values")
+            for(jsonValue in jsonValues) {
+                if(jsonValue is JSONArray) {
+                    val longValue = jsonValue.getLong(0) * 1000;
+                    val time = LocalDateTime.ofInstant(Instant.ofEpochMilli(longValue), ZoneId.systemDefault());
+                    val value = BigDecimal(jsonValue.getString(1))
+                    metric.values.add(MetricsData(
+                            time = time,
+                            value = value
+                    ))
+                }
+            }
+            metrics.timeSeries.add(metric)
+        }
+        return metrics
+
     }
 }
