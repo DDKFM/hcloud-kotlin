@@ -22,6 +22,6 @@ https://console.hetzner.cloud/
 
 **Contributing**
 
-Feel free to open issues on GitHub or fork the repository.
+Feel free to open issues on GitHub or fork the repository. If you want support us in any way, you may contact us or you have some ideas for features.. make a pull request. 
 
 Any feedback is welcome!
