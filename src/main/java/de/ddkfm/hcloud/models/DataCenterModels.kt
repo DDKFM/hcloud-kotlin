@@ -3,11 +3,17 @@ package de.ddkfm.hcloud.models
 data class DataCenter(
         var id: Int,
         var name: String,
-        var description: String
+        var description: String,
+        var location : Location,
+        var serverTypes : DataCenterServerType
+)
+data class DataCenterServerType(
+        var supported : List<Int>,
+        var available : List<Int>
 )
 
-data class location(
-        var  id : Int,
+data class Location (
+        var id : Int,
         var name : String,
         var description : String,
         var country : String,

@@ -19,13 +19,8 @@ class DataCenterApi(token : String) : ApiBase(token = token) {
         var returnList = mutableListOf<DataCenter>();
         datacenters.forEach {
             //Kotlin-Magic: "it" is automatically the current element in the JSONArray
-            val jsonDataCenters : JSONObject = it as JSONObject;
-            var dc = DataCenter(
-                    id = jsonDataCenters.getInt("id"),
-                    name = jsonDataCenters.getString("name"),
-                    description = jsonDataCenters.getString("description")
-            );
-            returnList.add(dc);
+            val jsonDataCenter : JSONObject = it as JSONObject;
+            returnList.add(mapDataCenter(jsonDataCenter))
         }
         return returnList;
     }
@@ -41,12 +36,7 @@ class DataCenterApi(token : String) : ApiBase(token = token) {
                 .`object`;
         val jsondatacenter = jsonResp.getJSONObject("datacenter");
 
-        var dc = DataCenter(
-                id = jsondatacenter.getInt("id"),
-                name = jsondatacenter.getString("name"),
-                description = jsondatacenter.getString("description")
-        );
-        return dc;
+        return mapDataCenter(jsondatacenter)
     }
 
 }

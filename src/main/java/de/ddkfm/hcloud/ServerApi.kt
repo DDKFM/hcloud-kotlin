@@ -23,7 +23,7 @@ class ServerApi(token : String) : ApiBase(token = token) {
             //Kotlin-Magic: "it" is automatically the current element in the JSONArray
             val jsonServer : JSONObject = it as JSONObject;
             val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-            var server = this.mapServer(jsonServer);
+            var server = mapServer(jsonServer);
             returnList.add(server)
         }
         return returnList;
@@ -32,74 +32,14 @@ class ServerApi(token : String) : ApiBase(token = token) {
     fun getServer(id : Int) : Server? {
         var resp = this.get("/servers/$id", null) ?: return null;
         var jsonServer = resp.getJSONObject("server");
-        return this.mapServer(jsonServer);
-    }
-
-    // map for data return of the server modules
-    private fun mapServer(obj : JSONObject?) : Server? {
-        if(obj == null)
-            return null;
-        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        return Server(
-                id = obj.getInt("id"),
-                name = obj.getString("name"),
-                backupWindow = if (obj.has("backup_window"))
-                    obj.get("backup_window")?.toString() ?: null
-                else
-                    null,
-                created = LocalDateTime.parse(obj.getString("created"), formatter),
-                datacenter = null,
-                image = null,
-                outgoingTraffic = obj.getInt("outgoing_traffic"),
-                includedTraffic = obj.getInt("included_traffic"),
-                incomingTraffic = obj.getInt("ingoing_traffic"),
-                iso = null,
-                locked = obj.getBoolean("locked"),
-                publicNet = PublicNetwork(
-                        ipv4 = IPv4(
-                                ip = obj.getJSONObject("public_net")
-                                        .getJSONObject("ipv4")
-                                        .getString("ip"),
-                                blocked = obj.getJSONObject("public_net")
-                                        .getJSONObject("ipv4")
-                                        .getBoolean("blocked"),
-                                dnsPtr = obj.getJSONObject("public_net")
-                                        .getJSONObject("ipv4")
-                                        .getString("dns_ptr")
-                        ),
-                        ipv6 = IPv6(
-                                ip = obj.getJSONObject("public_net")
-                                        .getJSONObject("ipv6")
-                                        .getString("ip"),
-                                blocked = obj.getJSONObject("public_net")
-                                        .getJSONObject("ipv6")
-                                        .getBoolean("blocked"),
-                                dnsPtr = obj.getJSONObject("public_net")
-                                        .getJSONObject("ipv6")
-                                        .getJSONArray("dns_ptr")
-                                        .map {
-                                            val dnsPtrEntry = it as JSONObject
-                                            IP(
-                                                    ip = dnsPtrEntry.getString("ip"),
-                                                    dnsPtr = dnsPtrEntry.getString("dns_ptr")
-                                            )
-                                        }
-
-
-                        ),
-                        floatingIPs = emptyList()
-                ),
-                rescueEnabled = obj.getBoolean("rescue_enabled"),
-                status = ServerStatus.valueOf(obj.getString("status")),
-                type = null
-        );
+        return mapServer(jsonServer);
     }
     //change attributes of a specified server from id
     fun changeServername(id : Int, name : String) : Server? {
         var resp = this.put("/servers/$id",
                         mapOf("Content-Type" to "application/json"),
                         JSONObject("{\"name\": \"$name\"}"))
-        return this.mapServer(resp?.getJSONObject("server") ?: null);
+        return mapServer(resp?.getJSONObject("server") ?: null);
     }
 
     // delete the specified server

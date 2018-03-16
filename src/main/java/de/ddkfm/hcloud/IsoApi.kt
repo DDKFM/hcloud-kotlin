@@ -2,13 +2,14 @@ package de.ddkfm.hcloud.de.ddkfm.hcloud.models
 
 import com.mashape.unirest.http.Unirest
 import de.ddkfm.hcloud.ApiBase
-import de.ddkfm.hcloud.models.isoModel
+import de.ddkfm.hcloud.mapIso
+import de.ddkfm.hcloud.models.Iso
 import org.json.JSONObject
 
 class IsoApi(token : String) : ApiBase(token = token) {
 
     // retrieve all available ISOs
-    fun getIsos() : List<isoModel> {
+    fun getIsos() : List<Iso> {
         var req = Unirest
                 .get("$endpoint/isos")
                 .header("Authorization", auth);
@@ -17,22 +18,16 @@ class IsoApi(token : String) : ApiBase(token = token) {
                 .body
                 .`object`;
         var isoRAW = jsonResp.getJSONArray("isos");
-        var returnList = mutableListOf<isoModel>();
+        var returnList = mutableListOf<Iso>();
         isoRAW.forEach {
             //Kotlin-Magic: "it" is automatically the current element in the JSONArray
             val jsonISO : JSONObject = it as JSONObject;
-            var iso = isoModel(
-                    id = jsonISO.getInt("id"),
-                    name = jsonISO.getString("name"),
-                    description = jsonISO.getString("description"),
-                    type = jsonISO.getString("type")
-            );
-            returnList.add(iso);
+            returnList.add(mapIso(jsonISO));
         }
         return returnList;
     }
     // get one ISOs
-    fun getOneIso(id: Int): isoModel{
+    fun getIso(id: Int): Iso{
         var req = Unirest
                 .get("$endpoint/isos/"+id)
                 .header("Authorization", auth);
@@ -41,13 +36,6 @@ class IsoApi(token : String) : ApiBase(token = token) {
                 .body
                 .`object`;
         var jsonISO = jsonResp.getJSONObject("iso");
-
-        var iso = isoModel(
-                id = jsonISO.getInt("id"),
-                name = jsonISO.getString("name"),
-                description = jsonISO.getString("description"),
-                type = jsonISO.getString("type")
-        );
-        return iso;
+        return return mapIso(jsonISO);
     }
 }

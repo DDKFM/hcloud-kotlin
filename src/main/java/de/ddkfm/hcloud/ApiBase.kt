@@ -1,5 +1,7 @@
 package de.ddkfm.hcloud
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.mashape.unirest.http.HttpResponse
 import com.mashape.unirest.http.JsonNode
 import com.mashape.unirest.http.Unirest
@@ -55,7 +57,10 @@ open class ApiBase {
                 }
         when(resp?.status) {
             200, 201 -> {
-                logger.debug("Resp: ${resp?.body?.toString()}")
+                var gson = GsonBuilder().setPrettyPrinting().create()
+                var parser = JsonParser()
+                var formated = gson.toJson(parser.parse(resp?.body?.toString()))
+                logger.debug("Resp: $formated")
                 return resp
             }
             else -> {

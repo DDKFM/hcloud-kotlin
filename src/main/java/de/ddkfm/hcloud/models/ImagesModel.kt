@@ -1,16 +1,18 @@
 package de.ddkfm.hcloud.models
 
-data class image(
+import java.time.LocalDateTime
+
+data class Image(
         var id: Int,
         var type: String,
         var status: String,
         var name: String,
         var description: String,
-        var ImageSize: Double,
+        var ImageSize: Double?,
         var DiskSize: Double,
-        var created: String,
-        var createdFrom: CreateFromData,
-        var BoundTo: Int,
+        var created: LocalDateTime,
+        var createdFrom: CreateFromData?,
+        var BoundTo: Int?,
         var OsFlavor: String,
         var OsVersion: String,
         var RapidDeploy: Boolean
