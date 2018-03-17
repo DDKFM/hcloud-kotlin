@@ -25,3 +25,6 @@ https://console.hetzner.cloud/
 Feel free to open issues on GitHub or fork the repository. If you want support us in any way, you may contact us or you have some ideas for features.. make a pull request. 
 
 Any feedback is welcome!
+
+also see: 
+Monitoring project built in Kotlin and the Hetzner Cloud: https://github.com/DDKFM/HCloudMonitoring
